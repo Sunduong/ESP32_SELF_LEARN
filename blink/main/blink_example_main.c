@@ -1,4 +1,4 @@
-/* Blink Example
+=/* Blink Example
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -19,7 +19,10 @@ static const char *TAG = "example";
 /* Use project configuration menu (idf.py menuconfig) to choose the GPIO to blink,
    or you can edit the following line and set a number here.
 */
-#define BLINK_GPIO CONFIG_BLINK_GPIO
+#define BLINK_GPIO              CONFIG_BLINK_GPIO
+#define USER_BUTTON_GPIO        GPIO_NUM_5
+#define ON                      1
+#define OFF                     0
 
 static uint8_t s_led_state = 0;
 
@@ -94,11 +97,25 @@ void app_main(void)
     /* Configure the peripheral according to the LED type */
     configure_led();
 
+    // Configure button GPIO as input with pull-down
+    gpio_reset_pin(USER_BUTTON_GPIO);
+    gpio_set_direction(USER_BUTTON_GPIO, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(USER_BUTTON_GPIO, GPIO_PULLDOWN_ONLY);
+
+    // int last_button_state = 0;
+    // int button_state;
+    // const int debounce_delay_ms = 50;
+
     while (1) {
-        ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
-        blink_led();
-        /* Toggle the LED state */
-        s_led_state = !s_led_state;
-        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        if (gpio_get_level(USER_BUTTON_GPIO) == 1)
+        {
+            ESP_LOGI(TAG, "Toggle the LED");
+            s_led_state = !s_led_state;
+            blink_led();
+        }
+        else
+        {
+            //Do nothing
+        }
     }
 }
