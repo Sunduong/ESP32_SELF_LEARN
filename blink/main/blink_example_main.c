@@ -1,4 +1,4 @@
-=/* Blink Example
+/* Blink Example
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -112,6 +112,7 @@ void app_main(void)
             ESP_LOGI(TAG, "Toggle the LED");
             s_led_state = !s_led_state;
             blink_led();
+            vTaskDelay(pdMS_TO_TICKS(500)); // Add a delay to debounce the button
         }
         else
         {
