@@ -102,21 +102,30 @@ void app_main(void)
     gpio_set_direction(USER_BUTTON_GPIO, GPIO_MODE_INPUT);
     gpio_set_pull_mode(USER_BUTTON_GPIO, GPIO_PULLDOWN_ONLY);
 
-    // int last_button_state = 0;
-    // int button_state;
-    // const int debounce_delay_ms = 50;
+    int last_button_state = 0;
+    int button_state;
+    const int debounce_delay_ms = 50;
+    TickType_t last_debounce_time = 0;
 
     while (1) {
-        if (gpio_get_level(USER_BUTTON_GPIO) == 1)
-        {
+        button_state = gpio_get_level(USER_BUTTON_GPIO);
+        if (button_state != last_button_state) {
+            // Button state changed, reset debounce timer
+            last_debounce_time = xTaskGetTickCount();
+        }
+
+        // If the button is pressed and stable for debounce_delay_ms
+        if ((button_state == 1) && ((xTaskGetTickCount() - last_debounce_time) * portTICK_PERIOD_MS > debounce_delay_ms)) {
             ESP_LOGI(TAG, "Toggle the LED");
             s_led_state = !s_led_state;
             blink_led();
-            vTaskDelay(pdMS_TO_TICKS(500)); // Add a delay to debounce the button
+            // Wait for button release to avoid repeated toggling
+            while (gpio_get_level(USER_BUTTON_GPIO) == 1) {
+                ESP_LOGI(TAG, "Have to release the button");
+                vTaskDelay(pdMS_TO_TICKS(10));
+            }
         }
-        else
-        {
-            //Do nothing
-        }
+        last_button_state = button_state;
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
