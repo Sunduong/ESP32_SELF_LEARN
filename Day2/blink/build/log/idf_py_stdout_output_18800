@@ -1,0 +1,128 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x2b (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048e22
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2810,len:0x1828
+load:0x403c8700,len:0x4
+load:0x403c8704,len:0xce8
+load:0x403cb700,len:0x2eb8
+entry 0x403c8918
+[0;32mI (26) boot: ESP-IDF v5.3.5-dirty 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time May  1 2026 23:51:09[0m
+[0;32mI (27) boot: Multicore bootloader[0m
+[0;32mI (30) boot: chip revision: v0.2[0m
+[0;32mI (34) boot: efuse block revision: v1.3[0m
+[0;32mI (39) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (43) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot: End of partition table[0m
+[0;32mI (96) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=09ff0h ( 40944) map[0m
+[0;32mI (112) esp_image: segment 1: paddr=0001a018 vaddr=3fc92600 size=02ed8h ( 11992) load[0m
+[0;32mI (115) esp_image: segment 2: paddr=0001cef8 vaddr=40374000 size=03120h ( 12576) load[0m
+[0;32mI (124) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=140dch ( 82140) map[0m
+[0;32mI (145) esp_image: segment 4: paddr=00034104 vaddr=40377120 size=0b46ch ( 46188) load[0m
+[0;32mI (161) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (161) boot: Disabling RNG early entropy source...[0m
+[0;32mI (173) cpu_start: Multicore app[0m
+[0;32mI (182) cpu_start: Pro cpu start user code[0m
+[0;32mI (182) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (182) app_init: Application information:[0m
+[0;32mI (185) app_init: Project name:     blink[0m
+[0;32mI (190) app_init: App version:      356d293[0m
+[0;32mI (195) app_init: Compile time:     May  2 2026 00:12:13[0m
+[0;32mI (201) app_init: ELF file SHA256:  2d1c10694...[0m
+[0;32mI (206) app_init: ESP-IDF:          v5.3.5-dirty[0m
+[0;32mI (211) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (216) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (221) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (226) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (233) heap_init: At 3FC95DC0 len 00053950 (334 KiB): RAM[0m
+[0;32mI (239) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (245) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (251) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (259) spi_flash: detected chip: boya[0m
+[0;32mI (262) spi_flash: flash io: dio[0m
+[0;33mW (266) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (279) sleep: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (286) sleep: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (294) main_task: Started on CPU0[0m
+[0;32mI (304) main_task: Calling app_main()[0m
+[0;32mI (304) example: Example configured to blink GPIO LED![0m
+[0;32mI (304) gpio: GPIO[10]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (314) gpio: GPIO[5]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (3354) example: Toggle the LED[0m
+[0;32mI (3354) example: Have to release the button[0m
+[0;32mI (3364) example: Have to release the button[0m
+[0;32mI (3374) example: Have to release the button[0m
+[0;32mI (3384) example: Have to release the button[0m
+[0;32mI (3394) example: Have to release the button[0m
+[0;32mI (4634) example: Toggle the LED[0m
+[0;32mI (4634) example: Have to release the button[0m
+[0;32mI (4644) example: Have to release the button[0m
+[0;32mI (4654) example: Have to release the button[0m
+[0;32mI (4664) example: Have to release the button[0m
+[0;32mI (4964) example: Toggle the LED[0m
+[0;32mI (4964) example: Have to release the button[0m
+[0;32mI (4974) example: Have to release the button[0m
+[0;32mI (4984) example: Have to release the button[0m
+[0;32mI (4994) example: Have to release the button[0m
+[0;32mI (5004) example: Have to release the button[0m
+[0;32mI (5014) example: Have to release the button[0m
+[0;32mI (5344) example: Toggle the LED[0m
+[0;32mI (5344) example: Have to release the button[0m
+[0;32mI (5354) example: Have to release the button[0m
+[0;32mI (5364) example: Have to release the button[0m
+[0;32mI (5774) example: Toggle the LED[0m
+[0;32mI (5774) example: Have to release the button[0m
+[0;32mI (5784) example: Have to release the button[0m
+[0;32mI (5794) example: Have to release the button[0m
+[0;32mI (5804) example: Have to release the button[0m
+[0;32mI (5814) example: Have to release the button[0m
+[0;32mI (5824) example: Have to release the button[0m
+[0;32mI (6144) example: Toggle the LED[0m
+[0;32mI (6144) example: Have to release the button[0m
+[0;32mI (6154) example: Have to release the button[0m
+[0;32mI (6164) example: Have to release the button[0m
+[0;32mI (6174) example: Have to release the button[0m
+[0;32mI (6184) example: Have to release the button[0m
+[0;32mI (6464) example: Toggle the LED[0m
+[0;32mI (6464) example: Have to release the button[0m
+[0;32mI (6474) example: Have to release the button[0m
+[0;32mI (6484) example: Have to release the button[0m
+[0;32mI (6494) example: Have to release the button[0m
+[0;32mI (6504) example: Have to release the button[0m
+[0;32mI (6514) example: Have to release the button[0m
+[0;32mI (6674) example: Toggle the LED[0m
+[0;32mI (6674) example: Have to release the button[0m
+[0;32mI (6684) example: Have to release the button[0m
+[0;32mI (6694) example: Have to release the button[0m
+[0;32mI (6844) example: Toggle the LED[0m
+[0;32mI (6844) example: Have to release the button[0m
+[0;32mI (6854) example: Have to release the button[0m
+[0;32mI (6864) example: Have to release the button[0m
+[0;32mI (6874) example: Have to release the button[0m
+[0;32mI (6984) example: Toggle the LED[0m
+[0;32mI (6984) example: Have to release the button[0m
+[0;32mI (6994) example: Have to release the button[0m
+[0;32mI (7004) example: Have to release the button[0m
+[0;32mI (7014) example: Have to release the button[0m
+[0;32mI (7024) example: Have to release the button[0m
+[0;32mI (7034) example: Have to release the button[0m
+[0;32mI (7164) example: Toggle the LED[0m
+[0;32mI (7164) example: Have to release the button[0m
+[0;32mI (7174) example: Have to release the button[0m
+[0;32mI (7184) example: Have to release the button[0m
+[0;32mI (7194) example: Have to release the button[0m
+[0;32mI (7204) example: Have to release the button[0m
+[0;32mI (7214) example: Have to release the button[0m
+[0;32mI (7224) example: Have to release the button[0m
+[0;32mI (7234) example: Have to release the button[0m
+[0;32mI (7244) example: Have to release the button[0m
