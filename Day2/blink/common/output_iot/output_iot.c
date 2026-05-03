@@ -17,8 +17,9 @@ void output_io_set_level(gpio_num_t gpio_num, int level)
     gpio_set_level(gpio_num, level);
 }
 
-void output_io_toggle(gpio_num_t gpio_num)
-{
-    int level = gpio_get_level(gpio_num);
-    gpio_set_level(gpio_num, !level);
-}
+// Too risk to used Hardware state for software logic, better to manage state in software
+// void output_io_toggle(gpio_num_t gpio_num)
+// {
+//     int level = gpio_get_level(gpio_num);
+//     gpio_set_level(gpio_num, !level);
+// }
