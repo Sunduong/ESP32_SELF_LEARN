@@ -14,12 +14,11 @@
 #include "esp_log.h"
 #include "led_strip.h"
 #include "sdkconfig.h"
-#include "input_iot.h"
+// #include "input_iot.h"
+// #include "output_iot.h"
 
 static const char *TAG = "example";
-
 #define BLINK_GPIO CONFIG_BLINK_GPIO
-#define GPIO_USER_BUTTON GPIO_NUM_5
 
 static void configure_led(void)
 {
@@ -31,26 +30,42 @@ static void configure_led(void)
     gpio_set_drive_capability(BLINK_GPIO, GPIO_DRIVE_CAP_3);
 }
 
-void input_event_callback(int pin)
+TimerHandle_t xTimers[2];
+
+void vTimerCallback(TimerHandle_t xTimer)
 {
-    if (pin == GPIO_USER_BUTTON)
-    {
-        static uint32_t last_press = 0;
-        uint32_t now = xTaskGetTickCountFromISR();
-        if (now - last_press > pdMS_TO_TICKS(200)) {
-            static int x = 0;
-            gpio_set_level(BLINK_GPIO, x);
-            x = 1 - x;
-            last_press = now;
-        }
+    configASSERT(xTimer);
+    int ulCount = (uint32_t) pvTimerGetTimerID(xTimer);
+    if (ulCount == 0) {
+        static int x = 0;
+        gpio_set_level(BLINK_GPIO, x);
+        x = !x;
+    } else if (ulCount == 1) {
+        printf("Hello\n");
+    }
+}
+
+
+void vTask1(void *pvParameters)
+{
+    while (1) {
+        printf("Task 1 is running\n");
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
 void app_main(void)
 {
-    esp_rom_gpio_pad_select_gpio(BLINK_GPIO);
     configure_led();
-
-    input_io_create(GPIO_USER_BUTTON, HI_TO_LO);
-    input_set_callback(input_event_callback);
+    xTimers[0] = xTimerCreate("TimerBlink", pdMS_TO_TICKS(2000),
+                                pdTRUE,
+                                (void *) 0,
+                                vTimerCallback);
+    xTimers[1] = xTimerCreate("TimerLog", pdMS_TO_TICKS(5000),
+                                pdTRUE,
+                                (void *) 1,
+                                vTimerCallback);
+    xTimerStart(xTimers[0], 0);
+    xTimerStart(xTimers[1], 0);
+    xTaskCreate(vTask1, "Task 1", 4096, NULL, 4, NULL);
 }
