@@ -23,7 +23,6 @@ static TickType_t time_pressed = 0;
 static TickType_t time_released = 0;
 
 #define BLINK_GPIO CONFIG_BLINK_GPIO
-#define USER_BUTTON_GPIO GPIO_NUM_5
 #define BIT_EVENT_BUTTON_PRESSED_DONE (1<<0)
 
 //Requirment: Short press is < 1 second, normal press is 1-3 seconds, long press is > 3 seconds, and timeout press is > 5s
@@ -37,11 +36,14 @@ void vDebounceTimerCallback(TimerHandle_t xTimer)
     if (input_io_get_level(USER_BUTTON_GPIO) == 0) //pressed
     {
         time_pressed = xTaskGetTickCount();
+        xTimerStart(xTimers, 0);
     }
     else //released
     {
         time_released = xTaskGetTickCount();
         xEventGroupSetBits(xEventGroup, BIT_EVENT_BUTTON_PRESSED_DONE);
+        xTimerStop(xTimers, 0);
+        output_io_set_level(BLINK_GPIO, 0);
     }
 }
 
@@ -68,6 +70,15 @@ void button_callback(gpio_num_t gpio_num)
     }
 }
 
+void button_timeout_callback(gpio_num_t gpio_num)
+{
+    if (gpio_num == USER_BUTTON_GPIO)
+    {
+        printf("Button timeout event detected in callback, gpio_num = %d\n", gpio_num);
+        output_io_set_level(BLINK_GPIO, 1);
+    }
+}
+
 void vTask1(void *pvParameters)
 {
     while(1)
@@ -88,10 +99,6 @@ void vTask1(void *pvParameters)
             {
                 printf("Long press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
             }
-            else
-            {
-                printf("Timeout press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
-            }
         }
     }
 }
@@ -105,7 +112,9 @@ void app_main(void)
     /* Configure the peripheral according to the LED type */
     configure_led();
     configure_button();
+    output_io_set_level(BLINK_GPIO, 0);
     input_set_callback(button_callback);
+    input_set_timeout_callback(button_timeout_callback);
 
 
     xTaskCreate(vTask1, "Task 1", 4096*2, NULL, 4, NULL);
