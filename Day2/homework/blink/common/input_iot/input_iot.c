@@ -38,13 +38,3 @@ void input_set_callback(void *cb)
     input_callback = (input_callback_t) cb;
 }
 
-int input_io_press_time(gpio_num_t gpio_num)
-{
-    uint16_t time = 0;
-    while (gpio_get_level(gpio_num) == 0)
-    {
-        vTaskDelay(pdMS_TO_TICKS(100));
-        time += 100;
-    }
-    return time;
-}

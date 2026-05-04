@@ -19,16 +19,14 @@
 #include "output_iot.h"
 
 static const char *TAG = "example";
+static TickType_t time_pressed = 0;
+static TickType_t time_released = 0;
 
 #define BLINK_GPIO CONFIG_BLINK_GPIO
 #define USER_BUTTON_GPIO GPIO_NUM_5
-#define BIT_EVENT_BUTTON_PRESSED (1<<0)
+#define BIT_EVENT_BUTTON_PRESSED_DONE (1<<0)
 
 //Requirment: Short press is < 1 second, normal press is 1-3 seconds, long press is > 3 seconds, and timeout press is > 5s
-#define BIT_EVENT_SHORT_PRESS       (1<<1)
-#define BIT_EVENT_NORMAL_PRESS      (1<<2)
-#define BIT_EVENT_LONG_PRESS        (1<<3)
-#define BIT_EVENT_TIMEOUT_PRESS     (1<<4)
 
 TimerHandle_t xDebounceTimer;
 EventGroupHandle_t xEventGroup;
@@ -36,14 +34,20 @@ EventGroupHandle_t xEventGroup;
 void vDebounceTimerCallback(TimerHandle_t xTimer)
 {
     configASSERT(xTimer);
-    if (input_io_get_level(USER_BUTTON_GPIO) == 0) {
-        xEventGroupSetBits(xEventGroup, BIT_EVENT_BUTTON_PRESSED);
+    if (input_io_get_level(USER_BUTTON_GPIO) == 0) //pressed
+    {
+        time_pressed = xTaskGetTickCount();
+    }
+    else //released
+    {
+        time_released = xTaskGetTickCount();
+        xEventGroupSetBits(xEventGroup, BIT_EVENT_BUTTON_PRESSED_DONE);
     }
 }
 
 static void configure_button(void)
 {
-    input_io_create(USER_BUTTON_GPIO, HI_TO_LO);
+    input_io_create(USER_BUTTON_GPIO, ANY_EDGE);
 }
 
 static void configure_led(void)
@@ -68,30 +72,25 @@ void vTask1(void *pvParameters)
 {
     while(1)
     {
-        EventBits_t uxBits = xEventGroupWaitBits(xEventGroup, BIT_EVENT_BUTTON_PRESSED, pdTRUE, pdFALSE, portMAX_DELAY);
-        if (uxBits & BIT_EVENT_BUTTON_PRESSED)
+        EventBits_t uxBits = xEventGroupWaitBits(xEventGroup, BIT_EVENT_BUTTON_PRESSED_DONE, pdTRUE, pdFALSE, portMAX_DELAY);
+        if (uxBits & BIT_EVENT_BUTTON_PRESSED_DONE)
         {
-            //button is pressed
-            if (input_io_get_level(USER_BUTTON_GPIO) == 0)
+            TickType_t delta_time = time_released - time_pressed;
+            if (delta_time < pdMS_TO_TICKS(1000))
             {
-                uint16_t time = input_io_press_time(USER_BUTTON_GPIO);
-                if (time < 1000)
-                {
-                    printf("Short press detected, time=%dms\n", time);
-                }
-                else if (time < 3000)
-                {
-                    printf("Normal press detected, time=%dms\n", time);
-                }
-                else if (time < 5000)
-                {
-                    printf("Long press detected, time=%dms\n", time);
-                }
-                else
-                {
-                    printf("Timeout press detected, time=%dms\n", time);
-                }
-
+                printf("Short press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
+            }
+            else if (delta_time < pdMS_TO_TICKS(3000))
+            {
+                printf("Normal press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
+            }
+            else if (delta_time < pdMS_TO_TICKS(5000))
+            {
+                printf("Long press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
+            }
+            else
+            {
+                printf("Timeout press detected, delta_time = %ld ms\n", delta_time * portTICK_PERIOD_MS);
             }
         }
     }
